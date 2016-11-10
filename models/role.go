@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
+	"fmt"
+
 	"github.com/davecgh/go-spew/spew"
 )
 
@@ -70,6 +72,10 @@ func LoadRoles() error {
 			}
 		}
 
+		if r.ConfigPath == "" {
+			return fmt.Errorf("Could not find config file for role %s", r.Name)
+		}
+
 		roleDirStructs = append(roleDirStructs, r)
 	}
 
@@ -86,6 +92,7 @@ func LoadRoles() error {
 
 		// TODO - write file manifest stuff here
 
+		// not thread safe
 		Roles[r.Name] = r
 
 	}
