@@ -7,7 +7,7 @@ import (
 
 	"fmt"
 
-	"github.com/davecgh/go-spew/spew"
+	"os"
 )
 
 // Role
@@ -23,17 +23,25 @@ type Role struct {
 	// A collection of files that will be transferred to the agent machine
 	*FileManifest
 	// The packages that this role will have installed
-	Packages []*Package
+	Packages
 	// The commands this role will run before starting services and after packages are installed
 	// These may execute files that have already been transferred.
-	Commands []*Command
+	Commands
 	// The services this role will run after packages are installed and commands are run
-	Services []*Service
+	Services
 }
 
 var (
 	Roles = make(map[string]*Role)
 )
+
+func NewRole() *Role {
+
+	return &Role{Packages: make(Packages, 0),
+		Commands:     make(Commands, 0),
+		Services:     make(Services, 0),
+		FileManifest: NewFileManifest()}
+}
 
 type roleDirStructure struct {
 	Name       string
@@ -80,7 +88,7 @@ func LoadRoles() error {
 	}
 
 	for _, rd := range roleDirStructs {
-		r := &Role{}
+		r := NewRole()
 		data, err := ioutil.ReadFile(rd.ConfigPath)
 		if err != nil {
 			return err
@@ -91,16 +99,46 @@ func LoadRoles() error {
 		}
 
 		// TODO - write file manifest stuff here
+		if rd.FilesPath != "" {
+			err = filepath.Walk(rd.FilesPath,
+				func(path string, f os.FileInfo, err error) error {
+					if err != nil {
+						return err
+					}
+
+					if path == *roleFolder {
+						return nil
+					}
+
+					if f.IsDir() {
+						return nil
+					}
+					newFile, err := NewFile(path)
+					if err != nil {
+						return err
+					}
+					r.FileManifest.Files = append(r.FileManifest.Files, newFile)
+					return nil
+				})
+
+			if err != nil {
+				return err
+			}
+
+		}
+
+		for _, f := range r.FileManifest.Files {
+			fmt.Println(f)
+		}
 
 		// not thread safe
 		Roles[r.Name] = r
 
 	}
-	spew.Dump(Roles)
+	//spew.Dump(Roles)
 	return nil
 }
 
-/*
 func visit(path string, f os.FileInfo, err error) error {
 	if err != nil {
 		return err
@@ -109,10 +147,7 @@ func visit(path string, f os.FileInfo, err error) error {
 	if path == *roleFolder {
 		return nil
 	}
-	if f.IsDir() {
-		currentDir = f.Name()
-
-	}
+	fmt.Println(path)
+	fmt.Println(f.Name())
 	return nil
 }
-*/

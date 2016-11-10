@@ -2,16 +2,20 @@ package models
 
 import (
 	"crypto/md5"
+	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 )
 
 type Files []*File
 
 type File struct {
 	*os.File
-	Info os.FileInfo
-	MD5  []byte
+	Info     os.FileInfo
+	MD5      []byte
+	Path     string
+	BaseName string
 }
 
 func NewFile(name string) (*File, error) {
@@ -38,11 +42,21 @@ func NewFile(name string) (*File, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	file.MD5 = m.Sum(data)
+	m.Write(data)
+	file.MD5 = m.Sum(nil)
+	file.BaseName = filepath.Base(name)
+	file.Path = name
 	return file, nil
+}
+
+func (f *File) MD5String() string {
+	return fmt.Sprintf("%x", f.MD5)
 }
 
 type FileManifest struct {
 	Files
+}
+
+func NewFileManifest() *FileManifest {
+	return &FileManifest{Files: make(Files, 0)}
 }

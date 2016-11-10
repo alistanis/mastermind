@@ -6,3 +6,5 @@ type Service struct {
 	Executable string
 	Args       []string
 }
+
+type Services []*Service

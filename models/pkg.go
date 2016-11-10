@@ -8,3 +8,5 @@ type Package struct {
 	Arch       string
 	Manager    string
 }
+
+type Packages []*Package
