@@ -10,7 +10,7 @@ type Files []*File
 
 type File struct {
 	*os.File
-	Info *os.FileInfo
+	Info os.FileInfo
 	MD5  []byte
 }
 
@@ -31,6 +31,9 @@ func NewFile(name string) (*File, error) {
 	file.Info = fi
 
 	m := md5.New()
+	// potentially super expensive and bad, because large files and reasons. can we trust fi.ModTime()?
+	// if we do, a new "save" would change the modtime without changing the data, thus making service restarts
+	// and redeployments more common even if the file itself doesn't change
 	data, err := ioutil.ReadAll(f)
 	if err != nil {
 		return nil, err

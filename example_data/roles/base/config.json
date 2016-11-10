@@ -1,0 +1,27 @@
+{
+  "Name": "base",
+  "FilesRoot": "/etc/mastermind",
+  "Packages": [
+    {
+      "Name": "examplepkg",
+      "Repository": "repoaddress",
+      "OS": "RHEL",
+      "Version": "4.26",
+      "Arch": "x86_64",
+      "Manager": "yum"
+    }
+  ],
+  "Commands": [
+    {
+      "Name": "script.sh",
+      "Args": []
+    }
+  ],
+  "Services": [
+    {
+      "Runner": "init.d",
+      "Executable": "our_service",
+      "Args": []
+    }
+  ]
+}

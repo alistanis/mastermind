@@ -6,4 +6,5 @@ type Package struct {
 	OS         string
 	Version    string
 	Arch       string
+	Manager    string
 }

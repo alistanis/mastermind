@@ -1,0 +1,26 @@
+{
+  "Name": "apache",
+  "Packages": [
+    {
+      "Name": "apache",
+      "Repository": "repoaddress",
+      "OS": "RHEL",
+      "Version": "4.26",
+      "Arch": "x86_64",
+      "Manager": "yum"
+    }
+  ],
+  "Commands": [
+    {
+      "Name": "install_apache_somehow.sh",
+      "Args": []
+    }
+  ],
+  "Services": [
+    {
+      "Runner": "init.d",
+      "Executable": "apache",
+      "Args": []
+    }
+  ]
+}
