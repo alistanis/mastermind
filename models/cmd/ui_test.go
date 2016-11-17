@@ -32,7 +32,7 @@ func testUi() *BasicUi {
 }
 
 func TestColoredUi(t *testing.T) {
-	bufferUi := testUi()
+	bufferUi := BufferUi()
 	ui := &ColoredUi{UiColorYellow, UiColorRed, bufferUi}
 
 	if !ui.supportsColors() {

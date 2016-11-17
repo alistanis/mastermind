@@ -15,7 +15,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mitchellh/packer/packer"
+	"github.com/alistanis/mastermind/models/cmd"
 	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/agent"
@@ -74,7 +74,7 @@ func New(address string, config *Config) (result *comm, err error) {
 	return
 }
 
-func (c *comm) Start(cmd *packer.RemoteCmd) (err error) {
+func (c *comm) Start(cmd *cmd.RemoteCmd) (err error) {
 	session, err := c.newSession()
 	if err != nil {
 		return
