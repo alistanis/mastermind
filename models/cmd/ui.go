@@ -45,6 +45,20 @@ type ColoredUi struct {
 	Ui         Ui
 }
 
+// NewColoredUi returns a wrapped BasicUi(bufferui)
+func NewColoredUi() *ColoredUi {
+	return &ColoredUi{UiColorGreen, UiColorRed, BufferUi()}
+}
+
+// BufferUi returns a new BasicUi with its Reader, Writer, and ErrorWriter initialized to a new(bytes.Buffer)
+func BufferUi() *BasicUi {
+	return &BasicUi{
+		Reader:      new(bytes.Buffer),
+		Writer:      new(bytes.Buffer),
+		ErrorWriter: new(bytes.Buffer),
+	}
+}
+
 // TargettedUi is a UI that wraps another UI implementation and modifies
 // the output to indicate a specific target. Specifically, all Say output
 // is prefixed with the target name. Message output is not prefixed but
