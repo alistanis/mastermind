@@ -2,10 +2,11 @@ package models
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"path/filepath"
 
-	"fmt"
+	"github.com/alistanis/mastermind/models/cmd"
 
 	"os"
 )
@@ -26,7 +27,7 @@ type Role struct {
 	Packages
 	// The commands this role will run before starting services and after packages are installed
 	// These may execute files that have already been transferred.
-	Commands
+	cmd.Commands
 	// The services this role will run after packages are installed and commands are run
 	Services
 }
@@ -38,7 +39,7 @@ var (
 func NewRole() *Role {
 
 	return &Role{Packages: make(Packages, 0),
-		Commands:     make(Commands, 0),
+		Commands:     make(cmd.Commands, 0),
 		Services:     make(Services, 0),
 		FileManifest: NewFileManifest()}
 }
@@ -98,7 +99,6 @@ func LoadRoles() error {
 			return err
 		}
 
-		// TODO - write file manifest stuff here
 		if rd.FilesPath != "" {
 			err = filepath.Walk(rd.FilesPath,
 				func(path string, f os.FileInfo, err error) error {
@@ -127,6 +127,7 @@ func LoadRoles() error {
 
 		}
 
+		// TODO - other things with files manifest
 		for _, f := range r.FileManifest.Files {
 			fmt.Println(f)
 		}
